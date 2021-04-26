@@ -1,6 +1,7 @@
 package edu.iis.mto.testreactor.dishwasher;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import org.hamcrest.Matchers;
@@ -8,6 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import edu.iis.mto.testreactor.dishwasher.engine.Engine;
@@ -38,7 +40,18 @@ class DishWasherTest {
 
     @Test
     void startingProgramWithDoorsOpenShouldResultInDoorError() {
-        fail("unimplemented");
+        FillLevel dummyLevel = FillLevel.FULL;
+        WashingProgram anyProgram = WashingProgram.ECO;
+        boolean anyFlag = true;
+        ProgramConfiguration program = ProgramConfiguration.builder()
+                                                           .withFillLevel(dummyLevel)
+                                                           .withProgram(anyProgram)
+                                                           .withTabletsUsed(anyFlag)
+                                                           .build();
+        Mockito.when(door.closed())
+               .thenReturn(false);
+        RunResult result = washer.start(program);
+        assertEquals(Status.DOOR_OPEN, result.getStatus());
     }
 
     @Test
